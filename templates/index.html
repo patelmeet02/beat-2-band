@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Beatbox Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Beat2Band — Live Classifier</h1>
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
+    <div id="status">
+        <p>Status: <span id="running">stopped</span></p>
+        <p>Detected: <span id="label">—</span></p>
+        <p>Confidence: <span id="confidence">—</span></p>
+    </div>
+
+    <script>
+        document.getElementById("startBtn").onclick = () => fetch("/start");
+        document.getElementById("stopBtn").onclick = () => fetch("/stop");
+
+        setInterval(() => {
+            fetch("/status").then(r => r.json()).then(data => {
+                document.getElementById("running").innerText = data.running ? "running" : "stopped";
+                document.getElementById("label").innerText = data.label || "—";
+                document.getElementById("confidence").innerText = data.confidence.toFixed(2);
+            });
+        }, 200);
+    </script>
+</body>
+</html>
